@@ -1,6 +1,6 @@
 export interface Payload {
-  fullname: string;
-  whatsapp_number: string;
+  nama_lengkap: string;
+  no_whatsapp: string;
   is_join_cg: boolean;
   age_category: string;
 }

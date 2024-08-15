@@ -3,15 +3,57 @@ import Button from "@/components/button";
 import Input from "@/components/input";
 import { CATEGORY_LIST } from "@/lib";
 import { Payload } from "@/types/payload";
+import { getFormData } from "@/utils/convertJSONToFormData";
+import moment from "moment";
 import { useState } from "react";
 
 export default function FormPage() {
+  const [loading, setLoading] = useState<boolean>(false);
   const [form, setForm] = useState<Payload>({
-    fullname: "",
-    whatsapp_number: "",
+    nama_lengkap: "",
+    no_whatsapp: "",
     is_join_cg: false,
-    age_category: "",
+    age_category: "umum",
   });
+  const handleSubmit = () => {
+    setLoading(true);
+    const submitted = {
+      "Nama Lengkap": form.nama_lengkap,
+      "No. Whatsapp": form.no_whatsapp,
+      "Sudah/Belum ikut CG": form.is_join_cg ? "Sudah" : "Belum",
+      Kategori: form.age_category,
+      "Submitted Date": moment(new Date()).format(`YYYY-MM-DD`),
+    };
+    const payload = getFormData(submitted);
+    fetch(
+      "https://script.google.com/macros/s/AKfycbzoxk5F-zHF6x3b_dPZq19sehTC1yYfvIQgEkBxi649k8hhFfLHIzBk1yQqbeyyyXbM/exec",
+      {
+        mode: "no-cors",
+        method: "POST",
+        body: payload,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Credentials": "true",
+          "Upgrade-Insecure-Requests": "1",
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      }
+    )
+      .then((res) => {
+        setLoading(false);
+        alert("successfully submit");
+        console.log("SUCCESSFULLY SUBMITTED");
+        setForm({
+          nama_lengkap: "",
+          no_whatsapp: "",
+          is_join_cg: false,
+          age_category: "umum",
+        });
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <main
       className={`flex flex-col items-center justify-center p-6 min-h-screen text-white`}
@@ -21,9 +63,9 @@ export default function FormPage() {
       </div>
       <div className={`w-full mt-6 flex flex-col gap-4`}>
         <Input
-          value={form.fullname}
+          value={form.nama_lengkap}
           onChange={(e) => {
-            setForm((prev) => ({ ...prev, fullname: e.target.value }));
+            setForm((prev) => ({ ...prev, nama_lengkap: e.target.value }));
           }}
           label={`Nama`}
           placeholder={`Masukkan nama anda`}
@@ -32,9 +74,9 @@ export default function FormPage() {
           prefix={`+62`}
           label={`Nomor Whatsapp`}
           placeholder={`Masukkan no. whatsapp`}
-          value={form.whatsapp_number}
+          value={form.no_whatsapp}
           onChange={(e) => {
-            setForm((prev) => ({ ...prev, whatsapp_number: e.target.value }));
+            setForm((prev) => ({ ...prev, no_whatsapp: e.target.value }));
           }}
         />
         <div>
@@ -106,7 +148,13 @@ export default function FormPage() {
         </div>
       </div>
       <div className={`mt-6 w-full`}>
-        <Button>Submit</Button>
+        <Button
+          onClick={() => {
+            handleSubmit();
+          }}
+        >
+          Submit
+        </Button>
       </div>
     </main>
   );
