@@ -152,6 +152,7 @@ export default function FormPage() {
           onClick={() => {
             handleSubmit();
           }}
+          disabled={loading}
         >
           Submit
         </Button>

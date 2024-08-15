@@ -13,7 +13,7 @@ export default function Button({
   return (
     <button
       {...props}
-      className={`${props.className} bg-accents text-white text-black  min-w-[50px] px-3 py-2 rounded-lg w-full font-semibold transition-all active:bg-opacity-80 duration-300 hover:bg-opacity-90 disabled:bg-[#363636] disabled:text-[#969696] flex items-center justify-center`}
+      className={`${props.className} bg-accents text-white  min-w-[50px] px-3 py-2 rounded-lg w-full font-semibold transition-all active:bg-opacity-80 duration-300 hover:bg-opacity-90 disabled:bg-[#363636] disabled:text-[#969696] flex items-center justify-center`}
       disabled={props.disabled || loading}
     >
       {loading ? (
